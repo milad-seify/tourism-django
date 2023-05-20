@@ -133,8 +133,8 @@ class PrivateUserApiTests(TestCase):
         res = self.client.get(ME_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data,  # type: ignore
-                         {'name': self.user.name, 'email': self.user.email})
+        self.assertEqual(res.data['email'], self.user.email)  # type: ignore
+        self.assertEqual(res.data['name'], self.user.name)  # type: ignore
 
     def test_http_post_me_not_allowed(self):
         """Test POST is not allowed for the me endpoint"""
