@@ -1,6 +1,7 @@
 """
 Database models
 """
+from django.conf import settings
 
 from django.db import models
 from django.contrib.auth.models import (
@@ -54,9 +55,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
     card_info = models.CharField(max_length=50, default='')
     # image = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+class Reservation(models.Model):
+    title = models.CharField(max_length=12)
+    detail = models.TextField(max_length=220, null=True, blank=True)
+    type = models.CharField(max_length=12)
+    created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title

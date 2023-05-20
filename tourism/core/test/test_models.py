@@ -1,7 +1,10 @@
 """"  test for models ."""
 
+from datetime import datetime
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+
+from core import models
 
 
 class ModelTests(TestCase):
@@ -44,3 +47,20 @@ class ModelTests(TestCase):
         )
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_create_reservation(self):
+        """Test creating a reservation is successful"""
+        user = get_user_model().objects.create_user(  # type: ignore
+            email='reservation@example.com',
+            password='resrtestpass12',
+        )
+        reservation = models.Reservation.objects.create(
+            title='res test',
+            detail='some thing detail test',
+            type='type test',
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
+            user=user,
+            # TODO:Maybe add image field
+        )
+        self.assertEqual(str(reservation), reservation.title)

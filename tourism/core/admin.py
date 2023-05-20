@@ -48,4 +48,12 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
+class ReservationAdmin(admin.ModelAdmin):
+    ordering = ['created_at']
+    list_filter = ('id', 'created_at', 'type')
+    list_display = ['title', 'user']
+    readonly_fields = ['user', 'created_at', 'updated_at']
+
+
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.Reservation, ReservationAdmin)
