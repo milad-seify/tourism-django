@@ -152,3 +152,11 @@ class PrivateUserApiTests(TestCase):
         self.assertEqual(self.user.name, payload['name'])
         self.assertTrue(self.user.check_password(payload['password']))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    # image test recipe api.
+
+
+class ImageUploadTests(TestCase):
+    """Test for the image upload API."""
+
+    # TODO:complete image test for user

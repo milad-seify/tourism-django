@@ -1,6 +1,10 @@
 """
 Database models
 """
+import uuid
+import os
+
+
 from django.conf import settings
 
 from django.db import models
@@ -10,6 +14,14 @@ from django.contrib.auth.models import (
     PermissionsMixin
 )
 from django.core.validators import RegexValidator
+
+
+def user_image_file_path(instance, filename):
+    """Generate file path for new user image"""
+    ext = os.path.splitext(filename)[1]
+    filename = f'{uuid.uuid4()}{ext}'
+
+    return os.path.join('uploads', 'user', filename)
 
 
 class UserManager(BaseUserManager):
@@ -57,7 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
     card_info = models.CharField(max_length=50, default='')
-    # image = models.ImageField(upload_to=upload_to, blank=True, null=True)
+    image = models.ImageField(null=True, upload_to=user_image_file_path)
 
     objects = UserManager()
 
