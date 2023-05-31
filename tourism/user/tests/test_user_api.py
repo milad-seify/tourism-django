@@ -30,8 +30,9 @@ class PublicUserApiTests(TestCase):
         """Test creating a user is successful"""
         payload = {
             'email': 'test@example.com',
+            'first_name': 'test',
+            'last_name': 'test',
             'password': 'testpass123',
-            'name': 'Test Name',
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -44,8 +45,10 @@ class PublicUserApiTests(TestCase):
         """Test error returned if user with email exists"""
         payload = {
             'email': 'test@example.com',
+            'first_name': 'test',
+            'last_name': 'test',
             'password': 'testpass123',
-            'name': 'Test Name',
+
         }
         create_user(**payload)
         res = self.client.post(CREATE_USER_URL, payload)
@@ -56,8 +59,10 @@ class PublicUserApiTests(TestCase):
         """Test an error is returned if password less than 5 chars."""
         payload = {
             'email': 'test@example.com',
+            'first_name': 'test',
+            'last_name': 'test',
             'password': 'pw',
-            'name': 'Test Name',
+
         }
 
         res = self.client.post(CREATE_USER_URL, payload)
@@ -73,7 +78,9 @@ class PublicUserApiTests(TestCase):
     def test_create_token_user(self):
         """Test generates token for valid credentials."""
         user_details = {
-            'name': 'test name',
+
+            'first_name': 'test',
+            'last_name': 'test',
             'password': 'testpassword@123',
             'email': 'user@example.com'
         }
@@ -122,8 +129,10 @@ class PrivateUserApiTests(TestCase):
     def setUp(self):
         self.user = create_user(
             email='test@example.com',
+            first_name='test',
+            last_name='test',
             password='passwordtest123',
-            name='test user',
+
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -134,7 +143,8 @@ class PrivateUserApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data['email'], self.user.email)  # type: ignore
-        self.assertEqual(res.data['name'], self.user.name)  # type: ignore
+        self.assertEqual(res.data['first_name'],  # type: ignore
+                         self.user.first_name)
 
     def test_http_post_me_not_allowed(self):
         """Test POST is not allowed for the me endpoint"""
@@ -144,19 +154,52 @@ class PrivateUserApiTests(TestCase):
 
     def test_update_user_profile(self):
         """Test updating the user profile for the authenticated user"""
-        payload = {'name': 'updated name', 'password': 'newpassword123'}
+        payload = {'first_name': 'updated name', 'password': 'newpassword123'}
 
         res = self.client.patch(ME_URL, payload)
 
         self.user.refresh_from_db()
-        self.assertEqual(self.user.name, payload['name'])
+        self.assertEqual(self.user.first_name, payload['first_name'])
         self.assertTrue(self.user.check_password(payload['password']))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-    # image test recipe api.
+    # image test user api.
 
 
-class ImageUploadTests(TestCase):
-    """Test for the image upload API."""
+# class ImageUploadTests(TestCase):
+#     """Test for the image upload API."""
 
-    # TODO:complete image test for user
+#     def setUp(self):
+#         self.client = APIClient()
+#         self.user = get_user_model().objects.create_user(  # type: ignore
+#             email='test@example.com',
+#             password='usertest123pass',
+#         )
+#         self.client.force_authenticate(self.user)
+#         self.recipe = create_recipe(user=self.user)
+
+#     def tearDown(self):
+#         self.recipe.image.delete()
+
+#     def test_uploads_image(self):
+#         """Test uploading an image to a recipe."""
+#         url = image_upload_url(self.recipe.id)  # type: ignore
+#         with tempfile.NamedTemporaryFile(suffix='.jpg') as image_file:
+#             img = Image.new('RGB', (10, 10))
+#             img.save(image_file, format='JPEG')
+#             image_file.seek(0)
+#             payload = {'image': image_file}
+#             response = self.client.post(url, payload, format='multipart')
+
+#         self.recipe.refresh_from_db()
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         self.assertIn('image', response.data)  # type: ignore
+#         self.assertTrue(os.path.exists(self.recipe.image.path))
+
+#     def test_upload_image_bad_request(self):
+#         """Test uploading invalid image."""
+#         url = image_upload_url(self.recipe.id)  # type: ignore
+#         payload = {'image': 'notanimage'}
+#         response = self.client.post(url, payload, format='multipart')
+
+#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

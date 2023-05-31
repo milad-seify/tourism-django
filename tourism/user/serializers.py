@@ -4,19 +4,24 @@ from django.contrib.auth import (get_user_model, authenticate,)
 from django.utils.translation import gettext as _
 
 from rest_framework import serializers
+from core.models import Comment
 
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the user objects."""
+    # first_name = serializers.CharField(required=False)
+    image = serializers.ImageField(required=False)
 
     class Meta:
         model = get_user_model()
-        fields = ['email', 'password', 'name',
+        fields = ['id', 'email', 'password', 'first_name',
+                  'last_name', 'first_time_login',
                   'address', 'phone_number', 'card_info', 'image']
         extra_kwargs = {'password':
                         {'write_only': True, 'min_length': 5},
                         'phone_number':
                         {'write_only': True, 'min_length': 11}, }
+        read_only_fields = ['id', 'first_time_login']
 
     def create(self, validated_data):
         """Create and return a user with encrypted password"""
@@ -63,3 +68,18 @@ class AuthTokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+
+class UserCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        read_only_fields = ['id']
+
+# class RecipeImageSerializer(serializers.ModelSerializer):
+#     """Serializer for  uploading image to recipes"""
+#     class Meta:
+#         model = Recipe
+#         fields = ['id', 'image']
+#         read_only_fields = ['id']
+#         extra_kwargs = {'image': {'required': 'True'}}
