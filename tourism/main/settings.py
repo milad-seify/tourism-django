@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+from glob import glob
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +46,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_spectacular',
     'reservation',
+    'django_filters',
+    'corsheaders',
+    'django.contrib.gis',
+    'rest_framework_gis',
 
 
 ]
@@ -57,6 +62,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'main.urls'
@@ -84,8 +91,16 @@ WSGI_APPLICATION = 'main.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'HOST': os.environ.get('DB_HOST'),
+    #     'NAME': os.environ.get('DB_NAME'),
+    #     'USER': os.environ.get('DB_USER'),
+    #     'PASSWORD': os.environ.get('DB_PASS'),
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        # use PostGIS engine for spatial data
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'HOST': os.environ.get('DB_HOST'),
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
@@ -143,9 +158,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
+    "ENUM_NAME_OVERRIDES": {
+        "Type": "Type7e5Enum"
+    }
 }
 
 SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
+
+CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:8050',]
+
+# GDAL_LIBRARY_PATH = '/usr/local/lib/libgdal.so'
+
+GDAL_LIBRARY_PATH=glob('/usr/lib/libgdal.so.*')[0]
+GEOS_LIBRARY_PATH=glob('/usr/lib/libgeos_c.so.*')[0]

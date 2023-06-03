@@ -8,14 +8,18 @@ import os
 from django.conf import settings
 from django.core.validators import (
     MaxValueValidator, MinValueValidator, FileExtensionValidator)
-
 from django.db import models
+from django.contrib.gis.db import models
+
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
     PermissionsMixin
 )
 from django.core.validators import RegexValidator
+
+# from django.contrib.gis.db import models
+# from django.contrib.gis.geos import Point
 
 
 def user_image_file_path(instance, filename):
@@ -83,7 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-
+#TODO:async
 class Comment(models.Model):
     feedback = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -94,10 +98,23 @@ class Comment(models.Model):
         return self.feedback
 
 
+# class Places(models.Model):
+#     name = models.CharField(max_length=100)
+#     address = models.TextField(max_length=300)
+#     description = models.TextField(max_length=250)
+#     location = models.PointField()
+
+
 class Reservation(models.Model):
     title = models.CharField(max_length=12)
     detail = models.TextField(max_length=220, null=True, blank=True)
-    type = models.CharField(max_length=12)
+    RESERVATION_TYPE = (
+        ('HOTEL_AND_RESIDENCE', 'HOTEL_AND_RESIDENCE'),
+        ('TRAVEL_AGENCY', 'TRAVEL_AGENCY'),
+        ('TOURIST_TOUR', 'TOURIST_TOUR')
+    )
+    type = models.CharField(
+        max_length=20, choices=RESERVATION_TYPE, default='NOTSET')
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
     user = models.ForeignKey(
@@ -109,23 +126,22 @@ class Reservation(models.Model):
 
 class HotelAndResidence(models.Model):
     name = models.CharField(max_length=50)
-    HOTEL = 'hotel'
-    RESIDENCE = 'residence'
-    NOTSET = 'notset'
-    TYPE = (
-        (HOTEL, 'HOTEL'),
-        (RESIDENCE, 'RESIDENCE'),
-        (NOTSET, 'NOTSET')
+
+    Ho = (
+        ('HOTEL', 'HOTEL'),
+        ('RESIDENCE', 'RESIDENCE'),
+        ('NOTSET', 'NOTSET')
     )
-    type = models.CharField(max_length=10, choices=TYPE,
-                            default=NOTSET, db_index=True)
+    type_hotel = models.CharField(max_length=10, choices=Ho,
+                                  default="NOTSET", db_index=True)
     address = models.CharField(max_length=100)
     facilities = models.TextField(max_length=500)
     star = models.SmallIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)], default=1)
     cost = models.DecimalField(
         max_digits=5, decimal_places=2, verbose_name='Cost per night')
-    reservation = models.ForeignKey('Reservation', on_delete=models.CASCADE)
+    reservation = models.ForeignKey(
+        'Reservation', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -139,12 +155,12 @@ class TouristTour(models.Model):
     BOAT = 'boat'
     CAR = 'car'
     MOTORCYCLE = 'motorcycle'
-    TYPE = (
+    To = (
         (BOAT, 'BOAT'),
         (CAR, 'CAR'),
         (MOTORCYCLE, 'MOTORCYCLE')
     )
-    type_of_transportation = models.CharField(max_length=11, choices=TYPE,
+    type_of_transportation = models.CharField(max_length=11, choices=To,
                                               default=CAR, db_index=True)
     cost = models.DecimalField(
         max_digits=5, decimal_places=2)
@@ -171,14 +187,14 @@ class TravelAgency(models.Model):
     SHIP = 'ship'
     NOTSET = 'notset'
 
-    TYPE = (
+    TRA = (
         (BUS, 'BUS'),
         (TRAIN, 'TRAIN'),
         (AIRPLANE, 'AIRPLANE'),
         (SHIP, 'SHIP'),
         (NOTSET, 'NOTSET')
     )
-    type_of_transportation = models.CharField(max_length=11, choices=TYPE,
+    type_of_transportation = models.CharField(max_length=11, choices=TRA,
                                               default=NOTSET, db_index=True)
     cost = models.DecimalField(
         max_digits=5, decimal_places=2)

@@ -4,6 +4,8 @@
 from django.contrib import admin  # noqa
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
+from django.forms import TextInput
+from django.db.models import IntegerField
 
 from core import models
 # Register your models here.
@@ -53,9 +55,32 @@ class UserAdmin(BaseUserAdmin):
 class ReservationAdmin(admin.ModelAdmin):
     ordering = ['created_at']
     list_filter = ('id', 'created_at', 'type')
-    list_display = ['title', 'user']
-    readonly_fields = ['user', 'created_at', 'updated_at']
+    list_display = ['title', 'user', ]
+    readonly_fields = ['created_at', 'updated_at']
+
+    # def get_author(self, obj):
+    #     return obj.reservation.HotelAndResidence
+    # 'HotelAndResidence__name'
+
+
+class HotelAndResidenceAdmin(admin.ModelAdmin):
+    list_display = ['name', 'reservation', ]
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name == 'star':
+            # Override the default widget with a TextInput and add some custom JavaScript to enforce the limit
+            kwargs['widget'] = TextInput(attrs={
+                'type': 'number',
+                'min': 1,
+                'max': 5,
+                'oninput': 'if(value > 5) value = 5; if(value < 1) value = 1;',
+            })
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
 
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Reservation, ReservationAdmin)
+admin.site.register(models.Comment)
+admin.site.register(models.HotelAndResidence, HotelAndResidenceAdmin)
+admin.site.register(models.TouristTour)
+admin.site.register(models.TravelAgency)

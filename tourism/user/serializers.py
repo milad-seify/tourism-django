@@ -71,10 +71,17 @@ class AuthTokenSerializer(serializers.Serializer):
 
 
 class UserCommentSerializer(serializers.ModelSerializer):
+    # user = UserSerializer(read_only=True)
+
     class Meta:
         model = Comment
         fields = '__all__'
         read_only_fields = ['id']
+
+    # def validate_price(self, value):
+    #     if value <= 0:
+    #         raise serializers.ValidationError("Cost must be positive")
+    #     return value
 
 # class RecipeImageSerializer(serializers.ModelSerializer):
 #     """Serializer for  uploading image to recipes"""

@@ -109,7 +109,7 @@ class ModelTests(TestCase):
         hotel_and_residence = models.HotelAndResidence.objects.create(
             reservation=reservation,
             name='testhote',
-            type='asfs',
+            type_hotel='asfs',
             address='testaddresshotel',
             facilities='testfacilitieshotel',
             cost=Decimal(1.00),
