@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'user',
+    'place',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
@@ -174,5 +175,5 @@ CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:8050',]
 
 # GDAL_LIBRARY_PATH = '/usr/local/lib/libgdal.so'
 
-GDAL_LIBRARY_PATH=glob('/usr/lib/libgdal.so.*')[0]
-GEOS_LIBRARY_PATH=glob('/usr/lib/libgeos_c.so.*')[0]
+GDAL_LIBRARY_PATH = glob('/usr/lib/libgdal.so.*')[0]
+GEOS_LIBRARY_PATH = glob('/usr/lib/libgeos_c.so.*')[0]

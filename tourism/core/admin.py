@@ -5,8 +5,6 @@ from django.contrib import admin  # noqa
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 from django.forms import TextInput
-from django.db.models import IntegerField
-
 from core import models
 # Register your models here.
 
@@ -76,6 +74,8 @@ class HotelAndResidenceAdmin(admin.ModelAdmin):
                 'oninput': 'if(value > 5) value = 5; if(value < 1) value = 1;',
             })
         return super().formfield_for_dbfield(db_field, request, **kwargs)
+
+
 
 
 admin.site.register(models.User, UserAdmin)

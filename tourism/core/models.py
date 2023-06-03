@@ -4,12 +4,11 @@ Database models
 import uuid
 import os
 
-
+from django.contrib.auth.decorators import permission_required
 from django.conf import settings
 from django.core.validators import (
     MaxValueValidator, MinValueValidator, FileExtensionValidator)
 from django.db import models
-from django.contrib.gis.db import models
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -18,7 +17,6 @@ from django.contrib.auth.models import (
 )
 from django.core.validators import RegexValidator
 
-# from django.contrib.gis.db import models
 # from django.contrib.gis.geos import Point
 
 
@@ -28,6 +26,8 @@ def user_image_file_path(instance, filename):
     filename = f'{uuid.uuid4()}{ext}'
 
     return os.path.join('uploads', 'user', filename)
+
+
 
 
 class UserManager(BaseUserManager):
@@ -70,7 +70,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 in the format: '+999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(
         validators=[phone_regex], max_length=17,
-        blank=True, default='')  # Validators should be a list
+        default='', unique=True)  # Validators should be a list
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -87,7 +87,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-#TODO:async
+# TODO:async
+
+
 class Comment(models.Model):
     feedback = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -98,11 +100,7 @@ class Comment(models.Model):
         return self.feedback
 
 
-# class Places(models.Model):
-#     name = models.CharField(max_length=100)
-#     address = models.TextField(max_length=300)
-#     description = models.TextField(max_length=250)
-#     location = models.PointField()
+
 
 
 class Reservation(models.Model):
