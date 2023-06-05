@@ -66,7 +66,8 @@ class HotelAndResidenceAdmin(admin.ModelAdmin):
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.name == 'star':
-            # Override the default widget with a TextInput and add some custom JavaScript to enforce the limit
+            # Override the default widget with a TextInput and
+            # add some custom JavaScript to enforce the limit
             kwargs['widget'] = TextInput(attrs={
                 'type': 'number',
                 'min': 1,
@@ -74,8 +75,6 @@ class HotelAndResidenceAdmin(admin.ModelAdmin):
                 'oninput': 'if(value > 5) value = 5; if(value < 1) value = 1;',
             })
         return super().formfield_for_dbfield(db_field, request, **kwargs)
-
-
 
 
 admin.site.register(models.User, UserAdmin)

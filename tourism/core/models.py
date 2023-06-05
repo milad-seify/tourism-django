@@ -4,7 +4,6 @@ Database models
 import uuid
 import os
 
-from django.contrib.auth.decorators import permission_required
 from django.conf import settings
 from django.core.validators import (
     MaxValueValidator, MinValueValidator, FileExtensionValidator)
@@ -26,8 +25,6 @@ def user_image_file_path(instance, filename):
     filename = f'{uuid.uuid4()}{ext}'
 
     return os.path.join('uploads', 'user', filename)
-
-
 
 
 class UserManager(BaseUserManager):
@@ -70,7 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 in the format: '+999999999'. Up to 15 digits allowed.")
     phone_number = models.CharField(
         validators=[phone_regex], max_length=17,
-        default='', unique=True)  # Validators should be a list
+        unique=True)  # Validators should be a list
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -98,9 +95,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.feedback
-
-
-
 
 
 class Reservation(models.Model):

@@ -1,17 +1,19 @@
 """Views for Reservation APIs"""
 
-from rest_framework import viewsets, mixins
-from rest_framework.response import Response
+from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import generics, status
-import django_filters.rest_framework
-import django_filters
+
 from rest_framework import filters
-from django.db.models import Q
-from .utils import EnablePartialUpdateMixin
-from core.models import Reservation, HotelAndResidence, TravelAgency, TouristTour
-from reservation.serializer import *
+from core.models import (Reservation, HotelAndResidence,
+                         TravelAgency, TouristTour)
+from reservation.serializer import (
+    ReservationDetailSerializer,
+    TravelAgencySerializer,
+    ReservationSerializer,
+    HotelAndResidenceSerializer,
+    TouristTourSerializer
+)
 
 
 class ReservationView(viewsets.ModelViewSet):
@@ -50,14 +52,6 @@ class HotelAndResidenceView(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return self.queryset.filter(reservation__user=user)
-
-    # def partial_update(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     serialized = self.get_serializer(
-    #         instance, data=request.data, partial=True)
-    #     serialized.is_valid(raise_exception=True)
-    #     serialized.save()
-    #     return Response(serialized.data)
 
 
 class TourismTourView(viewsets.ModelViewSet):

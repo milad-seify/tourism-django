@@ -10,7 +10,8 @@ router.register('reservations', views.ReservationView)
 router.register(r'hotelandresidence', views.HotelAndResidenceView,
                 basename='HotelAndResidence')
 router.register(r'tourismtour', views.TourismTourView, 'TourismTour')
-router.register(r'travelagency', views.TravelAgencyView, basename='TravelAgency')
+router.register(r'travelagency', views.TravelAgencyView,
+                basename='TravelAgency')
 
 # router.register('TouristTour', views.TouristTourView)
 app_name = 'reservation'  # for testing url in reverse in test file

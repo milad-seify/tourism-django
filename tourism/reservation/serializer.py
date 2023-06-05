@@ -1,10 +1,8 @@
 """serializer for reservation"""
 
-from django.contrib.auth import (get_user_model, authenticate,)
 
 from rest_framework import serializers
-from user.serializers import UserSerializer
-from rest_framework.exceptions import ValidationError
+
 
 from core.models import (
     Reservation,
@@ -51,7 +49,8 @@ class HotelAndResidenceSerializer(serializers.ModelSerializer):
             reservation.type = 'HOTEL_AND_RESIDENCE'  # type: ignore
             reservation.save()  # type: ignore
 
-        elif reservation_data is not None and reservation_data.get('user') and reservation_data['user']['id'] == user_id:
+        elif reservation_data is not None and reservation_data.get('user') \
+                and reservation_data['user']['id'] == user_id:
             reservation = reservation_data.get('id')
 
         else:
@@ -91,7 +90,8 @@ class TouristTourSerializer(serializers.ModelSerializer):
             reservation.type = 'TOURIST_TOUR'  # type: ignore
             reservation.save()  # type: ignore
 
-        elif reservation_data is not None and reservation_data.get('user') and reservation_data['user']['id'] == user_id:
+        elif reservation_data is not None and reservation_data.get('user')\
+                and reservation_data['user']['id'] == user_id:
             reservation = reservation_data.get('id')
 
         else:
@@ -131,7 +131,8 @@ class TravelAgencySerializer(serializers.ModelSerializer):
             reservation.type = 'TRAVEL_AGENCY'  # type: ignore
             reservation.save()  # type: ignore
 
-        elif reservation_data is not None and reservation_data.get('user') and reservation_data['user']['id'] == user_id:
+        elif reservation_data is not None and reservation_data.get('user')\
+                and reservation_data['user']['id'] == user_id:
             reservation = reservation_data.get('id')
 
         else:

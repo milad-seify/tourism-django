@@ -9,11 +9,13 @@ from core import models
 
 
 def create_user(email='test@example.com', password='testuser123',
-                first_name='testuser', last_name='testuserlastname'):
+                first_name='testuser',
+                last_name='testuserlastname', phone_number=69156987845):
     """Create and return new user"""
     return get_user_model().objects.\
         create_user(email=email, password=password,  # type: ignore
-                    first_name=first_name, last_name=last_name)
+                    first_name=first_name,\
+                    last_name=last_name, phone_number=phone_number)
 
 
 def create_reservation(user, title='testtitle',
@@ -33,11 +35,13 @@ class ModelTests(TestCase):
         password = 'testpass123'
         first_name = 'testuser'
         last_name = 'testuserlastname'
+        phone_number = 65987485112
         user = get_user_model().objects.create_user(  # type: ignore
             email=email,
             password=password,
             first_name=first_name,
             last_name=last_name,
+            phone_number=phone_number
         )
 
         self.assertEqual(user.email, email)
@@ -51,9 +55,14 @@ class ModelTests(TestCase):
             ['TEST3@EXAMPLE.COM', 'TEST3@example.com'],
             ['test4@example.COM', 'test4@example.com'],
         ]
+        i = 0
         for email, expected in sample_emails:
+            i += 1
+            phon_gen = 3659854231 + i
             user = get_user_model()\
-                .objects.create_user(email, 'sample123')  # type: ignore
+                .objects.\
+                create_user(email, 'sample123',  # type: ignore
+                            phone_number=phon_gen)
             self.assertEqual(user.email, expected)
 
     def test_new_user_without_email_raises_error(self):
@@ -66,7 +75,7 @@ class ModelTests(TestCase):
         """test that creating a superuser"""
         user = get_user_model().objects.create_superuser(  # type: ignore
             'test@test.com',
-            'pass123'
+            'pass123',
         )
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
@@ -86,6 +95,7 @@ class ModelTests(TestCase):
         user = get_user_model().objects.create_user(  # type: ignore
             email='reservation@example.com',
             password='resrtestpass12',
+            phone_number=65987485112,
         )
         reservation = models.Reservation.objects.create(
             title='res test',
@@ -104,6 +114,7 @@ class ModelTests(TestCase):
         user = get_user_model().objects.create_user(  # type: ignore
             email='hotelandre@example.com',
             password='resrtestpass12',
+            phone_number=659874846912
         )
         reservation = create_reservation(user=user)
         hotel_and_residence = models.HotelAndResidence.objects.create(
@@ -136,7 +147,7 @@ class ModelTests(TestCase):
         reservation = create_reservation(user=user)
         travel = models.TravelAgency.objects.create(
             name='testagency',
-            phone_number='09111111111',
+            phone_number=91141751114,
             cost=Decimal(1.00),
             reservation=reservation
         )

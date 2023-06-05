@@ -33,6 +33,7 @@ class PublicUserApiTests(TestCase):
             'first_name': 'test',
             'last_name': 'test',
             'password': 'testpass123',
+            'phone_number': '09145632578',
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -48,6 +49,7 @@ class PublicUserApiTests(TestCase):
             'first_name': 'test',
             'last_name': 'test',
             'password': 'testpass123',
+            'phone_number': '09145672578',
 
         }
         create_user(**payload)
@@ -62,6 +64,7 @@ class PublicUserApiTests(TestCase):
             'first_name': 'test',
             'last_name': 'test',
             'password': 'pw',
+            'phone_number': '09145636578',
 
         }
 
@@ -78,11 +81,12 @@ class PublicUserApiTests(TestCase):
     def test_create_token_user(self):
         """Test generates token for valid credentials."""
         user_details = {
-
             'first_name': 'test',
             'last_name': 'test',
             'password': 'testpassword@123',
-            'email': 'user@example.com'
+            'email': 'user@example.com',
+            'phone_number': '09175632578',
+
         }
 
         create_user(**user_details)
@@ -132,6 +136,7 @@ class PrivateUserApiTests(TestCase):
             first_name='test',
             last_name='test',
             password='passwordtest123',
+            phone_number=6145637578
 
         )
         self.client = APIClient()
@@ -182,7 +187,7 @@ class PrivateUserApiTests(TestCase):
 #         self.recipe.image.delete()
 
 #     def test_uploads_image(self):
-#         """Test uploading an image to a recipe."""
+#         """Test uploading an image to a user."""
 #         url = image_upload_url(self.recipe.id)  # type: ignore
 #         with tempfile.NamedTemporaryFile(suffix='.jpg') as image_file:
 #             img = Image.new('RGB', (10, 10))

@@ -24,6 +24,7 @@ class AdminSiteTests(TestCase):
             password='testpass123',
             first_name='testuser',
             last_name='testuserlastname',
+            phone_number=6587456945,
         )
 
     def test_users_list(self):

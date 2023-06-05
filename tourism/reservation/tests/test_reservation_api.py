@@ -61,7 +61,8 @@ class PrivateReservationTest(TestCase):
         self.client = APIClient()
         self.user = create_user(
             email='test@example.com',
-            password='passtestres123'
+            password='passtestres123',
+            phone_number=4756987456
         )
         self.client.force_authenticate(self.user)
 

@@ -30,6 +30,7 @@ urlpatterns = [
          name='api-docs'),
     path('api/user/', include('user.urls')),
     path('api/reservation/', include('reservation.urls')),
+    path('api/places/', include('place.urls')),
 
 ]
 

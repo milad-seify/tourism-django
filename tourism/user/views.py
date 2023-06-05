@@ -68,14 +68,6 @@ class UserCommentViews(viewsets.ModelViewSet):
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
     def get_queryset(self):
-        """Filter queryset to aut
-    def destroy(self, request, pk=None):
-        try:
-            comment = self.get_object()
-            comment.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Comment.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-henticated user."""
+        """Filter queryset to aut"""
         return self.queryset\
             .filter(user=self.request.user)  # type: ignore
