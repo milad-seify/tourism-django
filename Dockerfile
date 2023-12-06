@@ -27,6 +27,7 @@ RUN python -m venv /py && \
     chown -R tourism-user:tourism-user /vol && \
     chmod -R 755 /vol
 
+CMD ["gunicorn", "A.wsgi", ":8000"]
 
 ENV PATH="/py/bin:$PATH"
 

@@ -7,3 +7,4 @@ django-filter>=23.1,<=23.2
 djangorestframework-gis>=0.18,<=1.0
 django-cors-headers>=3.14.0,<=4.0.0
 django-geo>=0.7,<=0.8
+gunicorn>=21.1.0,<=21.2.0
